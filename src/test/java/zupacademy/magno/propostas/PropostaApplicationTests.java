@@ -1,4 +1,4 @@
-package zupacademy.magno.proposta;
+package zupacademy.magno.propostas;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
