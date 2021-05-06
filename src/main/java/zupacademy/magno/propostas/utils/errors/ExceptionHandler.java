@@ -5,6 +5,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -22,20 +24,18 @@ public class ExceptionHandler {
     @Autowired
     private MessageSource messageSource;
 
-    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     @org.springframework.web.bind.annotation.ExceptionHandler(MethodArgumentNotValidException.class)
-    public List<ErrorsDetailsDto> handle(MethodArgumentNotValidException exception){
-        List<ErrorsDetailsDto> dto = new ArrayList<>();
+    public ResponseEntity<ErroPadronizado> handle(MethodArgumentNotValidException exception){
+        Collection<String> mensagens = new ArrayList<>();
         List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
-
         fieldErrors.forEach(e -> {
-            String message = messageSource.getMessage(e, LocaleContextHolder.getLocale());
-            ErrorsDetailsDto error = new ErrorsDetailsDto(e.getField(), message);
-            dto.add(error);
+            String mensagemRecuperada = messageSource.getMessage(e, LocaleContextHolder.getLocale());
+            String mensagem = String.format("Campo %s %s", e.getField(), mensagemRecuperada);
+            mensagens.add(mensagem);
         });
 
-        return dto;
-
+        ErroPadronizado erroPadronizado = new ErroPadronizado(mensagens);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erroPadronizado);
     }
 
 //    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
@@ -44,23 +44,23 @@ public class ExceptionHandler {
 //        return new ErrorsDetailsDto("auth", exception.getMessage());
 //    }
 
-    @org.springframework.web.bind.annotation.ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<ErrorsDetailsDto> handle(ResponseStatusException exception){
-        return ResponseEntity.status(exception.getStatus())
-                .body(new ErrorsDetailsDto(exception.getReason()));
-    }
-
-    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-    @org.springframework.web.bind.annotation.ExceptionHandler(ConstraintViolationException.class)
-    public List<ErrorsDetailsDto> handle(ConstraintViolationException exception){
-        List<ErrorsDetailsDto> dto = new ArrayList<>();
-        Set<ConstraintViolation<?>> violations = exception.getConstraintViolations();
-
-        violations.forEach(e -> {
-            ErrorsDetailsDto error = new ErrorsDetailsDto(e.getInvalidValue().toString(), e.getMessage());
-            dto.add(error);
-        });
-
-        return dto;
-    }
+//    @org.springframework.web.bind.annotation.ExceptionHandler(ResponseStatusException.class)
+//    public ResponseEntity<ErroPadronizado> handle(ResponseStatusException exception){
+//        return ResponseEntity.status(exception.getStatus())
+//                .body(new ErroPadronizado(exception.getReason()));
+//    }
+//
+//    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+//    @org.springframework.web.bind.annotation.ExceptionHandler(ConstraintViolationException.class)
+//    public List<ErroPadronizado> handle(ConstraintViolationException exception){
+//        List<ErroPadronizado> dto = new ArrayList<>();
+//        Set<ConstraintViolation<?>> violations = exception.getConstraintViolations();
+//
+//        violations.forEach(e -> {
+//            ErroPadronizado error = new ErroPadronizado(e.getInvalidValue().toString(), e.getMessage());
+//            dto.add(error);
+//        });
+//
+//        return dto;
+//    }
 }
