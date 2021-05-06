@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 public class Proposta {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     @NotBlank @Column(unique = true)
     private String documento;
     @NotBlank @Email
@@ -22,6 +22,8 @@ public class Proposta {
     private String endereco;
     @NotNull @Positive
     private BigDecimal salario;
+    @Enumerated(EnumType.STRING)
+    private StatusRestricao statusRestricao = StatusRestricao.NAO_ANALISADO;
 
     /**
      * para uso do hibernate
@@ -41,7 +43,15 @@ public class Proposta {
         this.salario = salario;
     }
 
-    public Integer getId() {
+    public void setEstadoRestricao(StatusRestricao statusRestricao) {
+        this.statusRestricao = statusRestricao;
+    }
+
+    public StatusRestricao getEstadoRestricao() {
+        return statusRestricao;
+    }
+
+    public Long getId() {
         return id;
     }
 
@@ -63,5 +73,18 @@ public class Proposta {
 
     public BigDecimal getSalario() {
         return salario;
+    }
+
+    @Override
+    public String toString() {
+        return "Proposta{" +
+                "id=" + id +
+                ", documento='" + documento + '\'' +
+                ", email='" + email + '\'' +
+                ", nome='" + nome + '\'' +
+                ", endereco='" + endereco + '\'' +
+                ", salario=" + salario +
+                ", estadoRestricao=" + statusRestricao +
+                '}';
     }
 }
