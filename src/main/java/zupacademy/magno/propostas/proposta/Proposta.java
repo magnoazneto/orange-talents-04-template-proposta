@@ -12,7 +12,7 @@ public class Proposta {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @NotBlank
+    @NotBlank @Column(unique = true)
     private String documento;
     @NotBlank @Email
     private String email;

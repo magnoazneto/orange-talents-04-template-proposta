@@ -10,17 +10,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/v1")
 public class PropostaController {
 
     @Autowired
-    EntityManager manager;
+    PropostaRepository propostaRepository;
 
     private final Logger logger = LoggerFactory.getLogger(PropostaController.class);
 
@@ -28,12 +28,22 @@ public class PropostaController {
     @Transactional
     public ResponseEntity<?> criaProposta(@RequestBody @Valid PropostaRequest request,
                                           UriComponentsBuilder uriComponentsBuilder){
+        logger.trace("Request de Proposta do cliente={} com salario={} e email={} recebida.", request.getDocumento(), request.getSalario().toString(), request.getEmail());
 
-        logger.info(String.format("Request de Proposta do cliente=%s com salario=%s e email=%s recebida.", request.getDocumento(), request.getSalario().toString(), request.getEmail()));
-        Proposta novaProposta = request.toModel();
-        manager.persist(novaProposta);
-        logger.info(String.format("Proposta criada com id=%s, salário=%s, email=%s", novaProposta.getId(), novaProposta.getSalario(), novaProposta.getEmail()));
-        URI uriRetorno = uriComponentsBuilder.path("/propostas/{id}").build(novaProposta.getId());
-        return ResponseEntity.created(uriRetorno).build();
+        Optional<Proposta> resultado = propostaRepository.findByDocumento(request.getDocumento());
+
+        return resultado
+                .map(propostaExistente -> {
+                    logger.warn("Proposta com documento já existente recebida. Documento={}", request.getDocumento());
+                    return ResponseEntity.status(422).body("Já existe uma proposta para esse solicitante.");
+                })
+                .orElseGet(() -> {
+            Proposta novaProposta = request.toModel();
+            propostaRepository.save(novaProposta);
+            logger.info("Proposta criada com id={}, salário={}, email={}", novaProposta.getId(), novaProposta.getSalario(), novaProposta.getEmail());
+
+            URI uriRetorno = uriComponentsBuilder.path("/propostas/{id}").build(novaProposta.getId());
+            return ResponseEntity.created(uriRetorno).build();
+        });
     }
 }
