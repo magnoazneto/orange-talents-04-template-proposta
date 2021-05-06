@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
-import zupacademy.magno.propostas.clients.AnalisRestricaoRequest;
+import zupacademy.magno.propostas.clients.AnaliseRestricaoRequest;
 import zupacademy.magno.propostas.clients.AnaliseRestricaoClient;
 import zupacademy.magno.propostas.clients.AnaliseRestricaoResponse;
 import zupacademy.magno.propostas.clients.RetornoRestricao;
@@ -66,7 +66,7 @@ public class PropostaController {
         logger.info("Enviando nova requisição para analise de restrição={}", novaProposta.toString());
         StatusRestricao status;
         try{
-            AnaliseRestricaoResponse response = analiseRestricaoClient.analisaRestricao(new AnalisRestricaoRequest(novaProposta));
+            AnaliseRestricaoResponse response = analiseRestricaoClient.analisaRestricao(new AnaliseRestricaoRequest(novaProposta));
             logger.info("Resposta positiva={}", response.toString());
             assert response.getResultadoSolicitacao().equals(RetornoRestricao.SEM_RESTRICAO);
             status = StatusRestricao.ELEGIVEL;

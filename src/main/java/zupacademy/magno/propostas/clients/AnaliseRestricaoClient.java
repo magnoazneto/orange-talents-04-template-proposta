@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface AnaliseRestricaoClient {
 
     @RequestMapping(method = RequestMethod.POST, value = "/solicitacao", produces = "application/json")
-    public AnaliseRestricaoResponse analisaRestricao(AnalisRestricaoRequest request);
+    public AnaliseRestricaoResponse analisaRestricao(AnaliseRestricaoRequest request);
 
 }

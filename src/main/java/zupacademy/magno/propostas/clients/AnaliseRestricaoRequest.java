@@ -5,7 +5,7 @@ import zupacademy.magno.propostas.proposta.Proposta;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-public class AnalisRestricaoRequest {
+public class AnaliseRestricaoRequest {
 
     @NotBlank
     private String documento;
@@ -14,7 +14,7 @@ public class AnalisRestricaoRequest {
     @NotNull
     private Long idProposta;
 
-    public AnalisRestricaoRequest(Proposta proposta) {
+    public AnaliseRestricaoRequest(Proposta proposta) {
         this.documento = proposta.getDocumento();
         this.nome = proposta.getNome();
         this.idProposta = proposta.getId();
