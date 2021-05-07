@@ -50,12 +50,8 @@ public class Proposta {
         return this.idCartao != null;
     }
 
-    public void setEstadoRestricao(StatusRestricao statusRestricao) {
+    public void setStatusRestricao(StatusRestricao statusRestricao) {
         this.statusRestricao = statusRestricao;
-    }
-
-    public StatusRestricao getEstadoRestricao() {
-        return statusRestricao;
     }
 
     public Long getId() {

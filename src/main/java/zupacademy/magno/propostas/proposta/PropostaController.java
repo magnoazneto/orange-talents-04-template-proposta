@@ -6,10 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import zupacademy.magno.propostas.sistemasexternos.analises.AnaliseRestricaoRequest;
 import zupacademy.magno.propostas.sistemasexternos.analises.AnaliseRestricaoClient;
@@ -39,14 +36,19 @@ public class PropostaController {
 
     private final Logger logger = LoggerFactory.getLogger(PropostaController.class);
 
+    @GetMapping("/propostas/{id}")
+    public ResponseEntity<PropostaResponse> consultaProposta(@PathVariable("id") Long id){
+        Optional<Proposta> possivelProposta = transacao.executa(() -> propostaRepository.findById(id));
+        return possivelProposta.map(
+                proposta -> ResponseEntity.ok(new PropostaResponse(proposta)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @PostMapping("/propostas")
     public ResponseEntity<?> criaProposta(@RequestBody @Valid PropostaRequest request,
                                           UriComponentsBuilder uriComponentsBuilder){
 
-        // a cada chamada dos métodos de transacao, um commit é feito.
-        Optional<Proposta> possivelProposta = transacao.executa(() -> {
-            return propostaRepository.findByDocumento(request.getDocumento());
-        });
+        Optional<Proposta> possivelProposta = transacao.executa(() -> propostaRepository.findByDocumento(request.getDocumento()));
 
         return possivelProposta
                 .map(propostaExistente -> {
@@ -77,7 +79,7 @@ public class PropostaController {
             logger.warn("Resposta negativa. Feign={}",  e.getMessage());
             status = StatusRestricao.NAO_ELEGIVEL;
         }
-        novaProposta.setEstadoRestricao(status);
+        novaProposta.setStatusRestricao(status);
     }
 
 }
