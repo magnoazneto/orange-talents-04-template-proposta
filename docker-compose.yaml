@@ -97,6 +97,9 @@ services:
       ANALISES_URL: http://analise:9999/api/solicitacao
       CARTOES_URL: http://contas:8888/api/cartoes
       DATABASE_URL: jdbc:mysql://mysql:3306/propostas?createDatabaseIfNotExist=true
+      SPRING_PROFILES_ACTIVE: prod
+      DATABASE_USER: root
+      DATABASE_PASSWORD: root
 
   mysql:
     image: 'mysql:5.7'
