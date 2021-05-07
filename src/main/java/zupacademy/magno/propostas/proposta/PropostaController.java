@@ -4,9 +4,11 @@ import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 import zupacademy.magno.propostas.sistemasexternos.analises.AnaliseRestricaoRequest;
 import zupacademy.magno.propostas.sistemasexternos.analises.AnaliseRestricaoClient;
@@ -16,6 +18,7 @@ import zupacademy.magno.propostas.utils.Obfuscator;
 import zupacademy.magno.propostas.utils.transactions.ExecutorTransacao;
 
 import javax.validation.Valid;
+import java.net.ConnectException;
 import java.net.URI;
 import java.util.Optional;
 
@@ -75,11 +78,16 @@ public class PropostaController {
             logger.info("Resposta positiva para a proposta={}", response.getIdProposta());
             Assert.isTrue(response.getResultadoSolicitacao().equals(RetornoRestricao.SEM_RESTRICAO), "O resultado deveria ser SEM_RESTRICAO");
             status = StatusRestricao.ELEGIVEL;
+            novaProposta.setStatusRestricao(status);
         } catch (FeignException.UnprocessableEntity e){
             logger.warn("Resposta negativa. Feign={}",  e.getMessage());
             status = StatusRestricao.NAO_ELEGIVEL;
+            novaProposta.setStatusRestricao(status);
+        } catch (Exception e){
+            logger.error("Erro de conexão com o serviço de análises: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Não foi possível estabelecer conexão com o serviço de análise.");
         }
-        novaProposta.setStatusRestricao(status);
+
     }
 
 }

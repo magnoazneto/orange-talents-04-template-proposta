@@ -14,10 +14,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class ExceptionHandler {
@@ -38,17 +36,21 @@ public class ExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erroPadronizado);
     }
 
+    @org.springframework.web.bind.annotation.ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ErroPadronizado> handle(ResponseStatusException exception){
+        Collection<String> mensagens = new ArrayList<>();
+        mensagens.add(exception.getMessage());
+        return ResponseEntity.status(exception.getStatus())
+                .body(new ErroPadronizado(mensagens));
+    }
+
 //    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
 //    @org.springframework.web.bind.annotation.ExceptionHandler(AuthenticationException.class)
 //    public ErrorsDetailsDto handle(AuthenticationException exception){
 //        return new ErrorsDetailsDto("auth", exception.getMessage());
 //    }
 
-//    @org.springframework.web.bind.annotation.ExceptionHandler(ResponseStatusException.class)
-//    public ResponseEntity<ErroPadronizado> handle(ResponseStatusException exception){
-//        return ResponseEntity.status(exception.getStatus())
-//                .body(new ErroPadronizado(exception.getReason()));
-//    }
+
 //
 //    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
 //    @org.springframework.web.bind.annotation.ExceptionHandler(ConstraintViolationException.class)
