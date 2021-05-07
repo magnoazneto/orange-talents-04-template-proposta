@@ -1,4 +1,4 @@
-package zupacademy.magno.propostas.clients;
+package zupacademy.magno.propostas.sistemasexternos.analises;
 
 public class AnaliseRestricaoResponse {
 

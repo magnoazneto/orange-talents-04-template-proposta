@@ -1,4 +1,4 @@
-package zupacademy.magno.propostas.clients;
+package zupacademy.magno.propostas.sistemasexternos.analises;
 
 import zupacademy.magno.propostas.proposta.Proposta;
 

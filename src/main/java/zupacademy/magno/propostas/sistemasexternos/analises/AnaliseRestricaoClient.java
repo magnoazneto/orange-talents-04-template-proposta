@@ -1,4 +1,4 @@
-package zupacademy.magno.propostas.clients;
+package zupacademy.magno.propostas.sistemasexternos.analises;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
