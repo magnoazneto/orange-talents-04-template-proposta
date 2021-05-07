@@ -81,6 +81,33 @@ services:
       LOG_LEVEL: INFO
       JAEGER_ENDPOINT: http://jaeger:14268/api/traces
 
+  propostas:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    image: propostas
+    restart: on-failure
+    container_name: propostas
+    ports:
+    - "8080:8080"
+    depends_on:
+      - analise
+      - contas
+    environment:
+      ANALISES_URL: http://analise:9999/api/solicitacao
+      CARTOES_URL: http://contas:8888/api/cartoes
+      DATABASE_URL: jdbc:mysql://mysql:3306/propostas?createDatabaseIfNotExist=true
+
+  mysql:
+    image: 'mysql:5.7'
+    volumes:
+      - volume-mysql:/var/lib/mysql
+    ports:
+      - 3305:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: root
+
   transacoes:
     image: 'zupacademy/transacoes'
     ports:
@@ -138,3 +165,4 @@ volumes:
   grafana-volume:
   prometheus-volume:
   postgres-volume:
+  volume-mysql:
