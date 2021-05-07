@@ -1,9 +1,9 @@
 package zupacademy.magno.propostas.utils;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-@Service
+@Component
 public class Obfuscator {
 
     /**
