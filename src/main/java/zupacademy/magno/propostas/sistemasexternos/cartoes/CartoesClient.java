@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(value = "cartoes", url = "http://localhost:8888/api/cartoes")
+@FeignClient(value = "cartoes", url = "${cartoes.host}")
 @Component
 public interface CartoesClient {
 
