@@ -1,5 +1,7 @@
 package zupacademy.magno.propostas.proposta;
 
+import org.springframework.util.Assert;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -24,6 +26,7 @@ public class Proposta {
     private BigDecimal salario;
     @Enumerated(EnumType.STRING)
     private StatusRestricao statusRestricao = StatusRestricao.NAO_ANALISADO;
+    private String idCartao;
 
     /**
      * para uso do hibernate
@@ -41,6 +44,10 @@ public class Proposta {
         this.nome = nome;
         this.endereco = endereco;
         this.salario = salario;
+    }
+
+    public boolean existeCartaoAssociado(){
+        return this.idCartao != null;
     }
 
     public void setEstadoRestricao(StatusRestricao statusRestricao) {
@@ -75,6 +82,19 @@ public class Proposta {
         return salario;
     }
 
+    public StatusRestricao getStatusRestricao() {
+        return statusRestricao;
+    }
+
+    public String getIdCartao() {
+        return idCartao;
+    }
+
+    public void setIdCartao(String idCartao) {
+        Assert.hasLength(idCartao, "Número do cartão não deveria ser vazio.");
+        this.idCartao = idCartao;
+    }
+
     @Override
     public String toString() {
         return "Proposta{" +
@@ -84,7 +104,8 @@ public class Proposta {
                 ", nome='" + nome + '\'' +
                 ", endereco='" + endereco + '\'' +
                 ", salario=" + salario +
-                ", estadoRestricao=" + statusRestricao +
+                ", statusRestricao=" + statusRestricao +
+                ", idCartao='" + idCartao + '\'' +
                 '}';
     }
 }
