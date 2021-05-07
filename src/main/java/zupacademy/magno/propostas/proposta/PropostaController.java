@@ -28,7 +28,7 @@ public class PropostaController {
     PropostaRepository propostaRepository;
 
     @Autowired
-    ExecutorTransacao executor;
+    ExecutorTransacao transacao;
 
     @Autowired
     AnaliseRestricaoClient analiseRestricaoClient;
@@ -38,25 +38,25 @@ public class PropostaController {
     @PostMapping("/propostas")
     public ResponseEntity<?> criaProposta(@RequestBody @Valid PropostaRequest request,
                                           UriComponentsBuilder uriComponentsBuilder){
-        logger.info("Request de Proposta do cliente={} com salario={} e email={} recebida.", request.getDocumento(), request.getSalario().toString(), request.getEmail());
 
-        Optional<Proposta> resultado = propostaRepository.findByDocumento(request.getDocumento());
+        // a cada chamada dos métodos de transacao, um commit é feito.
+        Optional<Proposta> possivelProposta = transacao.executa(() -> {
+            return propostaRepository.findByDocumento(request.getDocumento());
+        });
 
-        return resultado
+        return possivelProposta
                 .map(propostaExistente -> {
                     logger.warn("Proposta com documento já existente recebida. Documento={}", request.getDocumento());
                     return ResponseEntity.status(422).body("Já existe uma proposta para esse solicitante.");
                 })
                 .orElseGet(() -> {
             Proposta novaProposta = request.toModel();
-            executor.salvaEComita(novaProposta);
-
-            logger.info("Proposta criada={}", novaProposta);
-
+            transacao.salvaEComita(novaProposta);
             analisaRestricao(novaProposta);
-            logger.info("Proposta pós análise={}", novaProposta);
+            transacao.atualizaEComita(novaProposta);
 
-            executor.atualizaEComita(novaProposta);
+            logger.info("Proposta salva={}", novaProposta);
+
             URI uriRetorno = uriComponentsBuilder.path("api/v1/propostas/{id}").build(novaProposta.getId());
             return ResponseEntity.created(uriRetorno).build();
         });
