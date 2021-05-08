@@ -1,16 +1,10 @@
 package zupacademy.magno.propostas.proposta;
 
-import feign.FeignException;
-import feign.RetryableException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 import zupacademy.magno.propostas.sistemasexternos.analises.*;
 import zupacademy.magno.propostas.utils.Obfuscator;
