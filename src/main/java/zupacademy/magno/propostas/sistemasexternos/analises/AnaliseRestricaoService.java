@@ -23,6 +23,12 @@ public class AnaliseRestricaoService {
     @Autowired ExecutorTransacao transacao;
     @Autowired ApplicationEventPublisher publisher;
 
+    public AnaliseRestricaoService(AnaliseRestricaoClient analiseRestricaoClient, ExecutorTransacao transacao, ApplicationEventPublisher publisher) {
+        this.analiseRestricaoClient = analiseRestricaoClient;
+        this.transacao = transacao;
+        this.publisher = publisher;
+    }
+
     /**
      *  Envia a proposta recebida para análise e atualiza seu StatusRestricao
      *  de acordo com a resposta.

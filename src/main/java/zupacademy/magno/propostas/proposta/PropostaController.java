@@ -28,8 +28,14 @@ public class PropostaController {
     @Autowired ExecutorTransacao transacao;
     @Autowired AnaliseRestricaoService analiseRestricaoService;
     @Autowired Obfuscator obfuscator;
-
     private final Logger logger = LoggerFactory.getLogger(PropostaController.class);
+
+    public PropostaController(PropostaRepository propostaRepository, ExecutorTransacao transacao, AnaliseRestricaoService analiseRestricaoService, Obfuscator obfuscator) {
+        this.propostaRepository = propostaRepository;
+        this.transacao = transacao;
+        this.analiseRestricaoService = analiseRestricaoService;
+        this.obfuscator = obfuscator;
+    }
 
     @GetMapping("/propostas/{id}")
     public ResponseEntity<PropostaResponse> consultaProposta(@PathVariable("id") Long id){

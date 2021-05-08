@@ -32,6 +32,12 @@ public class PropostaElegivelCriadaListener {
     @Autowired
     Obfuscator obfuscator;
 
+    public PropostaElegivelCriadaListener(CartoesClient cartoesClient, ExecutorTransacao transacao, Obfuscator obfuscator) {
+        this.cartoesClient = cartoesClient;
+        this.transacao = transacao;
+        this.obfuscator = obfuscator;
+    }
+
     @Async
     @EventListener
     public void consultaCartao(PropostaElegivelCriadaEvent event) throws InterruptedException {
