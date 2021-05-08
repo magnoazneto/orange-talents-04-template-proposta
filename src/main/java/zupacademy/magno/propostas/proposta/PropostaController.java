@@ -1,24 +1,22 @@
 package zupacademy.magno.propostas.proposta;
 
 import feign.FeignException;
+import feign.RetryableException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
-import zupacademy.magno.propostas.sistemasexternos.analises.AnaliseRestricaoRequest;
-import zupacademy.magno.propostas.sistemasexternos.analises.AnaliseRestricaoClient;
-import zupacademy.magno.propostas.sistemasexternos.analises.AnaliseRestricaoResponse;
-import zupacademy.magno.propostas.sistemasexternos.analises.RetornoRestricao;
+import zupacademy.magno.propostas.sistemasexternos.analises.*;
 import zupacademy.magno.propostas.utils.Obfuscator;
 import zupacademy.magno.propostas.utils.transactions.ExecutorTransacao;
 
 import javax.validation.Valid;
-import java.net.ConnectException;
 import java.net.URI;
 import java.util.Optional;
 
@@ -26,16 +24,10 @@ import java.util.Optional;
 @RequestMapping("/api/v1")
 public class PropostaController {
 
-    @Autowired
-    PropostaRepository propostaRepository;
-
-    @Autowired
-    ExecutorTransacao transacao;
-
-    @Autowired
-    AnaliseRestricaoClient analiseRestricaoClient;
-    @Autowired
-    Obfuscator obfuscator;
+    @Autowired PropostaRepository propostaRepository;
+    @Autowired ExecutorTransacao transacao;
+    @Autowired AnaliseRestricaoService analiseRestricaoService;
+    @Autowired Obfuscator obfuscator;
 
     private final Logger logger = LoggerFactory.getLogger(PropostaController.class);
 
@@ -56,38 +48,16 @@ public class PropostaController {
         return possivelProposta
                 .map(propostaExistente -> {
                     logger.warn("Proposta com documento já existente recebida. Documento={}", obfuscator.hide(request.getDocumento()));
-                    return ResponseEntity.status(422).body("Já existe uma proposta para esse solicitante.");
+                    return ResponseEntity.status(422).body("Já existe uma proposta em análise para esse solicitante.");
                 })
                 .orElseGet(() -> {
             Proposta novaProposta = request.toModel();
             transacao.salvaEComita(novaProposta);
-            analisaRestricao(novaProposta);
-            transacao.atualizaEComita(novaProposta);
+            analiseRestricaoService.analisaRestricao(novaProposta);
             logger.info("Proposta={} salva como={}", novaProposta.getId(), novaProposta.getStatusRestricao());
-
             URI uriRetorno = uriComponentsBuilder.path("api/v1/propostas/{id}").build(novaProposta.getId());
             return ResponseEntity.created(uriRetorno).build();
         });
-    }
-
-    public void analisaRestricao(Proposta novaProposta){
-        logger.info("Enviando analise da proposta de id={}", novaProposta.getId());
-        StatusRestricao status;
-        try{
-            AnaliseRestricaoResponse response = analiseRestricaoClient.analisaRestricao(new AnaliseRestricaoRequest(novaProposta));
-            logger.info("Resposta positiva para a proposta={}", response.getIdProposta());
-            Assert.isTrue(response.getResultadoSolicitacao().equals(RetornoRestricao.SEM_RESTRICAO), "O resultado deveria ser SEM_RESTRICAO");
-            status = StatusRestricao.ELEGIVEL;
-            novaProposta.setStatusRestricao(status);
-        } catch (FeignException.UnprocessableEntity e){
-            logger.warn("Resposta negativa. Feign={}",  e.getMessage());
-            status = StatusRestricao.NAO_ELEGIVEL;
-            novaProposta.setStatusRestricao(status);
-        } catch (Exception e){
-            logger.error("Erro de conexão com o serviço de análises: {}", e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Não foi possível estabelecer conexão com o serviço de análise.");
-        }
-
     }
 
 }

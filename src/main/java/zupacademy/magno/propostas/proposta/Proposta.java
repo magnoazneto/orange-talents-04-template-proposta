@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 public class Proposta {
@@ -27,6 +28,7 @@ public class Proposta {
     @Enumerated(EnumType.STRING)
     private StatusRestricao statusRestricao = StatusRestricao.NAO_ANALISADO;
     private String idCartao;
+    private LocalDateTime criadaEm = LocalDateTime.now();
 
     /**
      * para uso do hibernate
@@ -84,6 +86,10 @@ public class Proposta {
 
     public String getIdCartao() {
         return idCartao;
+    }
+
+    public LocalDateTime getCriadaEm() {
+        return criadaEm;
     }
 
     public void setIdCartao(String idCartao) {
