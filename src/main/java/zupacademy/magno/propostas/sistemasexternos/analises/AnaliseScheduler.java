@@ -21,7 +21,7 @@ public class AnaliseScheduler {
 
     private final Logger logger = LoggerFactory.getLogger(AnaliseScheduler.class);
 
-    @Scheduled(fixedDelayString = "5000")
+    @Scheduled(fixedDelayString = "${periodicidade.tentativa-analise-restricao")
     public void analisaPropostasNaoAnalisadas(){
         Set<Proposta> propostas = transacao.executa(() -> propostaRepository
                 .findPropostaByStatusRestricaoAndIdCartao(StatusRestricao.NAO_ANALISADO, null));

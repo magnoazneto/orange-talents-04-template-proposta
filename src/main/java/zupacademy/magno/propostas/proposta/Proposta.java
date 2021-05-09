@@ -45,6 +45,7 @@ public class Proposta {
         Assert.hasLength(email, "email não pode ser em branco.");
         Assert.hasLength(nome, "nome não pode ser em branco.");
         Assert.hasLength(endereco, "endereco não pode ser em branco.");
+        Assert.notNull(salario, "Salário não deveria ser nulo.");
         Assert.isTrue(salario.compareTo(new BigDecimal(0)) > 0, "Salário tem que ser positivo");
         this.documento = documento;
         this.email = email;
