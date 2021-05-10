@@ -21,10 +21,11 @@ public class AnaliseScheduler {
 
     private final Logger logger = LoggerFactory.getLogger(AnaliseScheduler.class);
 
-    @Scheduled(fixedDelayString = "${periodicidade.tentativa-analise-restricao")
+    @Scheduled(fixedRateString = "${periodicidade.tentativa-analises}")
+//    @Scheduled(fixedRateString = "100000")
     public void analisaPropostasNaoAnalisadas(){
         Set<Proposta> propostas = transacao.executa(() -> propostaRepository
-                .findPropostaByStatusRestricaoAndIdCartao(StatusRestricao.NAO_ANALISADO, null));
+                .findPropostaByStatusRestricaoAndCartaoId(StatusRestricao.NAO_ANALISADO, null));
 
         propostas.forEach(proposta -> {
             analiseRestricaoService.analisaRestricao(proposta);
