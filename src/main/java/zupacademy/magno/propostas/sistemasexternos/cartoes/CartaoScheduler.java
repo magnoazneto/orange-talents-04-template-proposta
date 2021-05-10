@@ -33,7 +33,7 @@ public class CartaoScheduler {
     public void verificaPropostasElegiveis() {
         logger.info("scheduling: verificando propostas elegiveis");
         Set<Proposta> propostas = transacao.executa(() -> propostaRepository
-                .findPropostaByStatusRestricaoAndIdCartao(StatusRestricao.ELEGIVEL, null));
+                .findPropostaByStatusRestricaoAndCartaoId(StatusRestricao.ELEGIVEL, null));
         logger.info("propostas encontradas={}", propostas.size());
         propostas.forEach(proposta -> publisher.publishEvent(new PropostaElegivelCriadaEvent(proposta)));
     }

@@ -3,6 +3,8 @@ package zupacademy.magno.propostas.proposta;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import zupacademy.magno.propostas.cartao.Cartao;
 
 import java.math.BigDecimal;
 
@@ -32,7 +34,8 @@ class PropostaTest {
     @Test
     @DisplayName("DEVE retornar true se houver cartao associado a proposta")
     public void test02(){
-        propostaSemCartao.setIdCartao("0000-0000-0000-0000");
+        Cartao cartao = Mockito.mock(Cartao.class);
+        propostaSemCartao.setCartao(cartao);
         assertTrue(propostaSemCartao.existeCartaoAssociado());
     }
 

@@ -47,7 +47,7 @@ public class PropostaElegivelCriadaListener {
         try{
             Assert.isTrue(!proposta.existeCartaoAssociado(), "Não deveria existir um cartão associado a essa proposta.");
             CartaoResponse cartaoResponse = cartoesClient.consultaCartao(proposta.getId());
-            proposta.setIdCartao(cartaoResponse.getId());
+            proposta.setCartao(cartaoResponse.toModel(proposta));
             transacao.atualizaEComita(proposta);
             logger.info("Novo cartão de numero={} associado a proposta de id={}", obfuscator.hide(cartaoResponse.getId()), proposta.getId());
         } catch (FeignException.UnprocessableEntity e){
@@ -55,7 +55,7 @@ public class PropostaElegivelCriadaListener {
         } catch (RetryableException e){
             logger.error("Erro de conexão com o serviço de cartões: {}", e.getMessage());
             e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Conexão mal sucedida com o serviço de cartões.");
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Conexão mal sucedida com o serviço de cartões.");
         } catch (Exception e){
             logger.error("Erro ao tentar conectar com o serviço de cartões={}", e.getMessage());
             e.printStackTrace();

@@ -8,5 +8,5 @@ import java.util.Set;
 public interface PropostaRepository extends JpaRepository<Proposta, Long> {
     Optional<Proposta> findByDocumento(String documento);
 
-    Set<Proposta> findPropostaByStatusRestricaoAndIdCartao(StatusRestricao status, Long idCartao);
+    Set<Proposta> findPropostaByStatusRestricaoAndCartaoId(StatusRestricao status, Long idCartao);
 }

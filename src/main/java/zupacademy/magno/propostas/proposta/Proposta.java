@@ -1,6 +1,7 @@
 package zupacademy.magno.propostas.proposta;
 
 import org.springframework.util.Assert;
+import zupacademy.magno.propostas.cartao.Cartao;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "proposta")
 public class Proposta {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +29,8 @@ public class Proposta {
     private BigDecimal salario;
     @Enumerated(EnumType.STRING)
     private StatusRestricao statusRestricao = StatusRestricao.NAO_ANALISADO;
-    private String idCartao;
+    @OneToOne(cascade = CascadeType.MERGE) @JoinColumn(name = "cartao_id")
+    private Cartao cartao;
     private LocalDateTime criadaEm = LocalDateTime.now();
 
     /**
@@ -55,7 +58,7 @@ public class Proposta {
     }
 
     public boolean existeCartaoAssociado(){
-        return this.idCartao != null;
+        return this.cartao != null;
     }
 
     public void setStatusRestricao(StatusRestricao statusRestricao) {
@@ -90,17 +93,17 @@ public class Proposta {
         return statusRestricao;
     }
 
-    public String getIdCartao() {
-        return idCartao;
+    public Cartao getCartao() {
+        return cartao;
     }
 
     public LocalDateTime getCriadaEm() {
         return criadaEm;
     }
 
-    public void setIdCartao(String idCartao) {
-        Assert.hasLength(idCartao, "Número do cartão não deveria ser vazio.");
-        this.idCartao = idCartao;
+    public void setCartao(Cartao cartao) {
+        Assert.notNull(cartao, "Cartão não deveria ser nulo.");
+        this.cartao = cartao;
     }
 
     @Override
@@ -113,7 +116,7 @@ public class Proposta {
                 ", endereco='" + endereco + '\'' +
                 ", salario=" + salario +
                 ", statusRestricao=" + statusRestricao +
-                ", idCartao='" + idCartao + '\'' +
+                ", cartao='" + cartao + '\'' +
                 '}';
     }
 }
