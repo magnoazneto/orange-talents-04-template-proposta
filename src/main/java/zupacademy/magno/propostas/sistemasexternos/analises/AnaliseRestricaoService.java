@@ -50,7 +50,7 @@ public class AnaliseRestricaoService {
         } catch (RetryableException e){
             logger.error("Erro de conexão com o serviço de análises: {}", e.getMessage());
             e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Não foi possível estabelecer conexão com o serviço de análise.");
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Não foi possível estabelecer conexão com o serviço de análise. A proposta será analisada quando disponível.");
         } catch (Exception e){
             logger.error("Erro desconhecido={}", e.getMessage());
             e.printStackTrace();

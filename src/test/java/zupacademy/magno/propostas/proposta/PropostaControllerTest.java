@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
+import zupacademy.magno.propostas.cartao.Cartao;
 import zupacademy.magno.propostas.sistemasexternos.analises.AnaliseRestricaoService;
 import zupacademy.magno.propostas.utils.Obfuscator;
 import zupacademy.magno.propostas.utils.transactions.ExecutorTransacao;
@@ -71,7 +72,11 @@ class PropostaControllerTest {
     @Test
     @DisplayName("DEVE retornar proposta para id existente")
     public void test02(){
+        Cartao cartaoMockado = mock(Cartao.class);
+        propostaSemCartao.setCartao(cartaoMockado);
+        when(cartaoMockado.getId()).thenReturn("0000-0000-0000-0000");
         when(executorTransacao.executa(any())).thenReturn(Optional.of(propostaSemCartao));
+
         ResponseEntity<PropostaResponse> respostaRecebida = controller.consultaProposta(1L);
         PropostaResponse propostaResponse = new PropostaResponse(propostaSemCartao);
         assertEquals(propostaResponse.getDocumento(), respostaRecebida.getBody().getDocumento());
