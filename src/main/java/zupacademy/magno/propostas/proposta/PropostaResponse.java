@@ -22,7 +22,9 @@ public class PropostaResponse {
         this.endereco = proposta.getEndereco();
         this.salario = proposta.getSalario();
         this.statusRestricao = proposta.getStatusRestricao();
-        this.idCartao = proposta.getCartao().getId();
+        if(proposta.existeCartaoAssociado()){
+            this.idCartao = proposta.getCartao().getId();
+        }
     }
 
     public Long getId() {

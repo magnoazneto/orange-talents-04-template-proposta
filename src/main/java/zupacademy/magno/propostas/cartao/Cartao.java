@@ -1,6 +1,7 @@
 package zupacademy.magno.propostas.cartao;
 
 import zupacademy.magno.propostas.biometria.Biometria;
+import zupacademy.magno.propostas.bloqueio.Bloqueio;
 import zupacademy.magno.propostas.proposta.Proposta;
 
 import javax.persistence.*;
@@ -27,6 +28,8 @@ public class Cartao {
     private Proposta proposta;
     @OneToMany(mappedBy = "cartao")
     private Set<Biometria> biometrias;
+    @OneToOne(cascade = CascadeType.MERGE) @JoinColumn(name = "bloqueio")
+    private Bloqueio bloqueio;
 
     @Deprecated
     public Cartao() {
@@ -58,5 +61,21 @@ public class Cartao {
 
     public Proposta getProposta() {
         return proposta;
+    }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public Set<Biometria> getBiometrias() {
+        return biometrias;
+    }
+
+    public boolean bloqueado(){
+        return this.bloqueio != null;
+    }
+
+    public void setBloqueio(Bloqueio bloqueio) {
+        this.bloqueio = bloqueio;
     }
 }
