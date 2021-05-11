@@ -7,6 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import zupacademy.magno.propostas.cartao.Cartao;
 import zupacademy.magno.propostas.cartao.CartaoRepository;
+import zupacademy.magno.propostas.sistemasexternos.cartoes.BloqueioFeignRequest;
+import zupacademy.magno.propostas.sistemasexternos.cartoes.BloqueioFeignResponse;
+import zupacademy.magno.propostas.sistemasexternos.cartoes.CartoesClient;
 import zupacademy.magno.propostas.utils.Obfuscator;
 import zupacademy.magno.propostas.utils.transactions.ExecutorTransacao;
 
@@ -21,6 +24,7 @@ public class BloqueioController {
     @Autowired ExecutorTransacao transacao;
     private final Logger logger = LoggerFactory.getLogger(BloqueioController.class);
     @Autowired Obfuscator obfuscator;
+    @Autowired CartoesClient cartoesClient;
 
     @PostMapping("/{numeroCartao}")
     public ResponseEntity<?> novoBloqueio(@PathVariable("numeroCartao") String numeroCartao,
@@ -32,10 +36,13 @@ public class BloqueioController {
             if(cartaoEncontrado.bloqueado()){
                 return ResponseEntity.unprocessableEntity().body("Cartão já bloqueado.");
             }
-            Bloqueio novoBloqueio = new Bloqueio(servletRequest.getRemoteAddr(), userAgent, cartaoEncontrado);
-            cartaoEncontrado.setBloqueio(novoBloqueio);
-            transacao.atualizaEComita(cartaoEncontrado);
-            logger.info("Novo bloqueio efetuado no cartão={}", obfuscator.hide(cartaoEncontrado.getNumero()));
+            BloqueioFeignResponse resultado = cartoesClient.bloquearCartao(numeroCartao, new BloqueioFeignRequest());
+            if(resultado.bloqueado()){
+                Bloqueio novoBloqueio = new Bloqueio(servletRequest.getRemoteAddr(), userAgent, cartaoEncontrado);
+                cartaoEncontrado.setBloqueio(novoBloqueio);
+                transacao.atualizaEComita(cartaoEncontrado);
+                logger.info("Novo bloqueio efetuado no cartão={}", obfuscator.hide(cartaoEncontrado.getNumero()));
+            }
             return ResponseEntity.ok().build();
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }

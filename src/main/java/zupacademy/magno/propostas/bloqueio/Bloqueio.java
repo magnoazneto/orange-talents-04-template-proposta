@@ -14,7 +14,7 @@ public class Bloqueio {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDateTime instanteBloqueio = LocalDateTime.now();
+    private LocalDateTime bloqueadoEm = LocalDateTime.now();
     @NotBlank private String ipSolicitante;
     @NotBlank private String agenteDoUsuario;
     @NotNull @OneToOne @JoinColumn(name = "cartao_id")
@@ -40,8 +40,8 @@ public class Bloqueio {
         return id;
     }
 
-    public LocalDateTime getInstanteBloqueio() {
-        return instanteBloqueio;
+    public LocalDateTime getBloqueadoEm() {
+        return bloqueadoEm;
     }
 
     public String getIpSolicitante() {

@@ -30,6 +30,8 @@ public class Cartao {
     private Set<Biometria> biometrias;
     @OneToOne(cascade = CascadeType.MERGE) @JoinColumn(name = "bloqueio")
     private Bloqueio bloqueio;
+    @Enumerated(value = EnumType.STRING)
+    private StatusCartao status = StatusCartao.ATIVO;
 
     @Deprecated
     public Cartao() {
@@ -72,10 +74,12 @@ public class Cartao {
     }
 
     public boolean bloqueado(){
-        return this.bloqueio != null;
+        return this.status.equals(StatusCartao.BLOQUEADO);
     }
 
     public void setBloqueio(Bloqueio bloqueio) {
         this.bloqueio = bloqueio;
+        this.status = StatusCartao.BLOQUEADO;
     }
+
 }
