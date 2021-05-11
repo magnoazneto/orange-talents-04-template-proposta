@@ -109,7 +109,7 @@ services:
 #      - 3305:3306
 #    environment:
 #      MYSQL_ROOT_PASSWORD: root
-#      MYSQL_DATABASE: root
+#      MYSQL_DATABASE: propostas
 
   transacoes:
     image: 'zupacademy/transacoes'

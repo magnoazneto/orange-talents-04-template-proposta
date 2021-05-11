@@ -11,7 +11,6 @@ import zupacademy.magno.propostas.cartao.CartaoRepository;
 import zupacademy.magno.propostas.proposta.PropostaController;
 import zupacademy.magno.propostas.utils.transactions.ExecutorTransacao;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.Optional;
