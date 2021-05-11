@@ -81,35 +81,39 @@ services:
       LOG_LEVEL: INFO
       JAEGER_ENDPOINT: http://jaeger:14268/api/traces
 
-#  propostas:
-#    build:
-#      dockerfile: Dockerfile
-#      context: .
-#    image: propostas
-#    restart: on-failure
-#    container_name: propostas
-#    ports:
-#    - "8080:8080"
-#    depends_on:
-#      - analise
-#      - contas
-#    environment:
-#      ANALISES_URL: http://analise:9999/api/solicitacao
-#      CARTOES_URL: http://contas:8888/api/cartoes
-#      DATABASE_URL: jdbc:mysql://mysql:3306/propostas?createDatabaseIfNotExist=true
-#      SPRING_PROFILES_ACTIVE: prod
-#      DATABASE_USER: root
-#      DATABASE_PASSWORD: root
-#
-#  mysql:
-#    image: 'mysql:5.7'
-#    volumes:
-#      - volume-mysql:/var/lib/mysql
-#    ports:
-#      - 3305:3306
-#    environment:
-#      MYSQL_ROOT_PASSWORD: root
-#      MYSQL_DATABASE: propostas
+  propostas:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    image: propostas
+    restart: on-failure
+    container_name: propostas
+    ports:
+    - "8080:8080"
+    depends_on:
+      - analise
+      - contas
+      - keycloak
+      - mysql
+    environment:
+      ANALISES_URL: http://analise:9999/api/solicitacao
+      CARTOES_URL: http://contas:8888/api/cartoes
+      DATABASE_URL: jdbc:mysql://mysql:3306/propostas?createDatabaseIfNotExist=true
+      SPRING_PROFILES_ACTIVE: prod
+      DATABASE_USER: root
+      DATABASE_PASSWORD: root
+      KEYCLOAK_ISSUER_URI: http://keycloak:8080/auth/realms/propostas
+      KEYCLOAK_JWKS_URI: http://keycloak:8080/auth/realms/propostas/protocol/openid-connect/certs
+
+  mysql:
+    image: 'mysql:5.7'
+    volumes:
+      - volume-mysql:/var/lib/mysql
+    ports:
+      - 3305:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: propostas
 
   transacoes:
     image: 'zupacademy/transacoes'
