@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@FeignClient(value = "solicitacao", url = "${analises.host}")
+@FeignClient(value = "analises", url = "${analises.host}")
 @Component
 public interface AnaliseRestricaoClient {
 
