@@ -3,6 +3,7 @@ package zupacademy.magno.propostas.cartao;
 import zupacademy.magno.propostas.biometria.Biometria;
 import zupacademy.magno.propostas.bloqueio.Bloqueio;
 import zupacademy.magno.propostas.proposta.Proposta;
+import zupacademy.magno.propostas.viagem.AvisoViagem;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -32,6 +33,8 @@ public class Cartao {
     private Bloqueio bloqueio;
     @Enumerated(value = EnumType.STRING)
     private StatusCartao status = StatusCartao.ATIVO;
+    @OneToMany(mappedBy = "cartao")
+    private Set<AvisoViagem> avisosDeViagem;
 
     @Deprecated
     public Cartao() {
@@ -88,5 +91,9 @@ public class Cartao {
 
     public StatusCartao getStatus() {
         return status;
+    }
+
+    public Set<AvisoViagem> getAvisosDeViagem() {
+        return avisosDeViagem;
     }
 }

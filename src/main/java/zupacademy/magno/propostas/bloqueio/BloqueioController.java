@@ -65,7 +65,7 @@ public class BloqueioController {
         } catch (Exception e){
             logger.error("Erro ao tentar conectar com o serviço de cartões={}", e.getMessage());
             e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro desconhecido no servidor.");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro desconhecido no serviço externo.");
         }
     }
 }
