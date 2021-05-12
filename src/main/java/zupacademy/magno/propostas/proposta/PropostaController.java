@@ -56,18 +56,10 @@ public class PropostaController {
             Proposta novaProposta = request.toModel();
             transacao.salvaEComita(novaProposta);
             analiseRestricaoService.analisaRestricao(novaProposta);
-            analisaRestricao(novaProposta);
             logger.info("Proposta={} salva como={}", novaProposta.getId(), novaProposta.getStatusRestricao());
             URI uriRetorno = uriComponentsBuilder.path("api/v1/propostas/{id}").build(novaProposta.getId());
             return ResponseEntity.created(uriRetorno).build();
         });
-    }
-
-    private void analisaRestricao(Proposta novaProposta){
-        // chamada pro Feign
-            // cria uma classe Request (AnaliseRestricaoRequest)
-            // guardar a resposta dessa requsicao numa outra classe (analiseRestricaResponse)
-            // faz o que quiser (setar elegivel ou nao) (try catch)
     }
 
 }
