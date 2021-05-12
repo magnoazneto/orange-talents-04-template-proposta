@@ -5,7 +5,7 @@ import zupacademy.magno.propostas.proposta.Proposta;
 
 import java.time.LocalDateTime;
 
-public class CartaoResponse {
+public class CartaoFeignResponse {
 
     private String id;
     private String titular;
@@ -13,7 +13,7 @@ public class CartaoResponse {
     private Integer limite;
     private String idProposta;
 
-    public CartaoResponse(String id, String titular, LocalDateTime emitidoEm, Integer limite, String idProposta) {
+    public CartaoFeignResponse(String id, String titular, LocalDateTime emitidoEm, Integer limite, String idProposta) {
         this.id = id;
         this.titular = titular;
         this.emitidoEm = emitidoEm;

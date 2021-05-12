@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.web.server.ResponseStatusException;
-import zupacademy.magno.propostas.sistemasexternos.cartoes.CartaoResponse;
+import zupacademy.magno.propostas.sistemasexternos.cartoes.CartaoFeignResponse;
 import zupacademy.magno.propostas.sistemasexternos.cartoes.CartoesClient;
 import zupacademy.magno.propostas.utils.Obfuscator;
 import zupacademy.magno.propostas.utils.transactions.ExecutorTransacao;
@@ -46,7 +46,7 @@ public class PropostaElegivelCriadaListener {
         Proposta proposta = event.getPropostaElegivel();
         try{
             Assert.isTrue(!proposta.existeCartaoAssociado(), "Não deveria existir um cartão associado a essa proposta.");
-            CartaoResponse cartaoResponse = cartoesClient.consultaCartao(proposta.getId());
+            CartaoFeignResponse cartaoResponse = cartoesClient.consultaCartao(proposta.getId());
             proposta.setCartao(cartaoResponse.toModel(proposta));
             transacao.atualizaEComita(proposta);
             logger.info("Novo cartão de numero={} associado a proposta de id={}", obfuscator.hide(cartaoResponse.getId()), proposta.getId());

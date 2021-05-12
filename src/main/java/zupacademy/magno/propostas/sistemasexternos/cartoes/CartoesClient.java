@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 public interface CartoesClient {
 
     @RequestMapping(method = RequestMethod.GET,  produces = "application/json")
-    public CartaoResponse consultaCartao(@RequestParam("idProposta") Long idProposta);
+    public CartaoFeignResponse consultaCartao(@RequestParam("idProposta") Long idProposta);
 
     @RequestMapping(method = RequestMethod.POST, value = "{id}/bloqueios", produces = "application/json")
     public BloqueioFeignResponse bloquearCartao(@PathVariable("id") String numeroCartao, @RequestBody BloqueioFeignRequest request);

@@ -10,6 +10,7 @@ import zupacademy.magno.propostas.sistemasexternos.analises.*;
 import zupacademy.magno.propostas.utils.Obfuscator;
 import zupacademy.magno.propostas.utils.transactions.ExecutorTransacao;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.Optional;
@@ -23,6 +24,8 @@ public class PropostaController {
     @Autowired AnaliseRestricaoService analiseRestricaoService;
     @Autowired Obfuscator obfuscator;
     private final Logger logger = LoggerFactory.getLogger(PropostaController.class);
+    @Autowired
+    AnaliseRestricaoClient analiseRestricaoClient;
 
     public PropostaController(PropostaRepository propostaRepository, ExecutorTransacao transacao, AnaliseRestricaoService analiseRestricaoService, Obfuscator obfuscator) {
         this.propostaRepository = propostaRepository;
@@ -44,7 +47,6 @@ public class PropostaController {
                                           UriComponentsBuilder uriComponentsBuilder){
 
         Optional<Proposta> possivelProposta = transacao.executa(() -> propostaRepository.findByDocumento(request.getDocumento()));
-
         return possivelProposta
                 .map(propostaExistente -> {
                     logger.warn("Proposta com documento já existente recebida. Documento={}", obfuscator.hide(request.getDocumento()));
@@ -54,10 +56,18 @@ public class PropostaController {
             Proposta novaProposta = request.toModel();
             transacao.salvaEComita(novaProposta);
             analiseRestricaoService.analisaRestricao(novaProposta);
+            analisaRestricao(novaProposta);
             logger.info("Proposta={} salva como={}", novaProposta.getId(), novaProposta.getStatusRestricao());
             URI uriRetorno = uriComponentsBuilder.path("api/v1/propostas/{id}").build(novaProposta.getId());
             return ResponseEntity.created(uriRetorno).build();
         });
+    }
+
+    private void analisaRestricao(Proposta novaProposta){
+        // chamada pro Feign
+            // cria uma classe Request (AnaliseRestricaoRequest)
+            // guardar a resposta dessa requsicao numa outra classe (analiseRestricaResponse)
+            // faz o que quiser (setar elegivel ou nao) (try catch)
     }
 
 }

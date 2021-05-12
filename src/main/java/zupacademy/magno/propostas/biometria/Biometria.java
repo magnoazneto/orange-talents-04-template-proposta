@@ -11,7 +11,7 @@ public class Biometria {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private byte[] impressaoDigital;
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.MERGE) @JoinColumn(name = "cartao_id")
     private Cartao cartao;
 
     public Biometria(byte[] impressaoDigital, Cartao cartao) {
