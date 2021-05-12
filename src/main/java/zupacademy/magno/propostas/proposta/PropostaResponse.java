@@ -1,5 +1,7 @@
 package zupacademy.magno.propostas.proposta;
 
+import zupacademy.magno.propostas.cartao.CartaoResponse;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -13,7 +15,8 @@ public class PropostaResponse {
     private String endereco;
     private BigDecimal salario;
     private StatusRestricao statusRestricao;
-    private String idCartao;
+    private CartaoResponse cartao;
+
     public PropostaResponse(@NotNull @Valid Proposta proposta) {
         this.id = proposta.getId();
         this.documento = proposta.getDocumento();
@@ -23,7 +26,7 @@ public class PropostaResponse {
         this.salario = proposta.getSalario();
         this.statusRestricao = proposta.getStatusRestricao();
         if(proposta.existeCartaoAssociado()){
-            this.idCartao = proposta.getCartao().getId();
+            this.cartao = new CartaoResponse(proposta.getCartao());
         }
     }
 
@@ -55,7 +58,7 @@ public class PropostaResponse {
         return statusRestricao;
     }
 
-    public String getIdCartao() {
-        return idCartao;
+    public CartaoResponse getCartao() {
+        return cartao;
     }
 }

@@ -31,11 +31,11 @@ public class BloqueioController {
     @Autowired Obfuscator obfuscator;
     @Autowired CartoesClient cartoesClient;
 
-    @PostMapping("/{numeroCartao}")
-    public ResponseEntity<?> novoBloqueio(@PathVariable("numeroCartao") String numeroCartao,
+    @PostMapping("/{idCartao}")
+    public ResponseEntity<?> novoBloqueio(@PathVariable("idCartao") Long idCartao,
                                           HttpServletRequest servletRequest,
                                           @RequestHeader(value = "User-Agent") String userAgent){
-        Optional<Cartao> possivelCartao = cartaoRepository.findByNumero(numeroCartao);
+        Optional<Cartao> possivelCartao = cartaoRepository.findById(idCartao);
 
         return possivelCartao.map(cartaoEncontrado -> {
             if(cartaoEncontrado.bloqueado()){

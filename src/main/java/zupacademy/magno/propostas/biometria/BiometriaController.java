@@ -24,11 +24,11 @@ public class BiometriaController {
 
     private final Logger logger = LoggerFactory.getLogger(PropostaController.class);
 
-    @PostMapping("/{numero}")
+    @PostMapping("/{idCartao}")
     public ResponseEntity<?> criaBiometria(@RequestBody @Valid BiometriaRequest request,
-                                           @PathVariable("numero") String numero,
+                                           @PathVariable("idCartao") Long idCartao,
                                            UriComponentsBuilder uriComponentsBuilder){
-        Optional<Cartao> possivelCartao = cartaoRepository.findByNumero(numero);
+        Optional<Cartao> possivelCartao = cartaoRepository.findById(idCartao);
         return possivelCartao.map(cartaoEncontrado -> {
             Biometria novaBiometria = request.toModel(cartaoEncontrado);
             transacao.salvaEComita(novaBiometria);

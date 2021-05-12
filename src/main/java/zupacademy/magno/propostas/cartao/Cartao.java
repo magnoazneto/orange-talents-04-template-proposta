@@ -45,8 +45,8 @@ public class Cartao {
         this.proposta = proposta;
     }
 
-    public String getId() {
-        return numero;
+    public Long getId() {
+        return id;
     }
 
     public String getTitular() {
@@ -82,4 +82,11 @@ public class Cartao {
         this.status = StatusCartao.BLOQUEADO;
     }
 
+    public Bloqueio getBloqueio() {
+        return bloqueio;
+    }
+
+    public StatusCartao getStatus() {
+        return status;
+    }
 }

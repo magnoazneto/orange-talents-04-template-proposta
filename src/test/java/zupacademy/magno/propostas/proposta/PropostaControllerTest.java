@@ -74,7 +74,7 @@ class PropostaControllerTest {
     public void test02(){
         Cartao cartaoMockado = mock(Cartao.class);
         propostaSemCartao.setCartao(cartaoMockado);
-        when(cartaoMockado.getId()).thenReturn("0000-0000-0000-0000");
+        when(cartaoMockado.getId()).thenReturn(1L);
         when(executorTransacao.executa(any())).thenReturn(Optional.of(propostaSemCartao));
 
         ResponseEntity<PropostaResponse> respostaRecebida = controller.consultaProposta(1L);
