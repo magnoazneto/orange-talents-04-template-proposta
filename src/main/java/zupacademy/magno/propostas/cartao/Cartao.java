@@ -4,6 +4,7 @@ import zupacademy.magno.propostas.biometria.Biometria;
 import zupacademy.magno.propostas.bloqueio.Bloqueio;
 import zupacademy.magno.propostas.carteira.Carteira;
 import zupacademy.magno.propostas.carteira.TipoCarteira;
+import zupacademy.magno.propostas.config.criptografia.EncryptToDatabase;
 import zupacademy.magno.propostas.proposta.Proposta;
 import zupacademy.magno.propostas.viagem.AvisoViagem;
 
@@ -22,7 +23,7 @@ public class Cartao {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank
+    @NotBlank @Convert(converter = EncryptToDatabase.class)
     private String numero;
     @NotBlank
     private String titular;

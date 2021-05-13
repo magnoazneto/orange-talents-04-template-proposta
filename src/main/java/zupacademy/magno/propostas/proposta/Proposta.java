@@ -2,6 +2,7 @@ package zupacademy.magno.propostas.proposta;
 
 import org.springframework.util.Assert;
 import zupacademy.magno.propostas.cartao.Cartao;
+import zupacademy.magno.propostas.config.criptografia.EncryptToDatabase;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -17,7 +18,7 @@ public class Proposta {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank @Column(unique = true)
+    @NotBlank @Column(unique = true) @Convert(converter = EncryptToDatabase.class)
     private String documento;
     @NotBlank @Email
     private String email;
