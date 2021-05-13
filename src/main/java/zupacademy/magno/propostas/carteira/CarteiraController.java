@@ -42,7 +42,7 @@ public class CarteiraController {
                 cartoesClient.associaCarteira(cartaoEncontrado.getNumero(), new CarteiraFeignRequest(novaCarteira));
                 transacao.salvaEComita(novaCarteira);
                 return null;
-            });
+            }, "Já existe uma carteira com dados semelhantes cadastrada.");
             URI uriRetorno = uriComponentsBuilder.path("api/v1/carteiras/{id}").build(novaCarteira.getId());
             return ResponseEntity.created(uriRetorno).build();
         }).orElseGet(() -> ResponseEntity.notFound().build());

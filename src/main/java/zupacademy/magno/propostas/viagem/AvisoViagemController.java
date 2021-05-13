@@ -47,7 +47,7 @@ public class AvisoViagemController {
                 transacao.salvaEComita(novoAvisoViagem);
                 logger.info("Aviso de viagem criado para o cartão={}", obfuscator.hide(cartaoEncontrado.getNumero()));
                 return null;
-            });
+            }, "Já existe uma viagem encerrando nesta data.");
             return ResponseEntity.ok().build();
         }).orElseGet(() -> ResponseEntity.notFound().build());
 

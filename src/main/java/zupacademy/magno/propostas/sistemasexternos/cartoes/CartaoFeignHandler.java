@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
 import java.util.concurrent.Callable;
 
 @Component
@@ -15,13 +16,13 @@ public class CartaoFeignHandler {
 
     private final Logger logger = LoggerFactory.getLogger(CartaoFeignHandler.class);
 
-    public void executa(Callable<Void> codigoDeRequisicao){
+    public void executa(Callable<Void> codigoDeRequisicao, String mensagemErro){
         try{
             codigoDeRequisicao.call();
         } catch (FeignException.UnprocessableEntity e){
             logger.error("Erro 422 ao tentar chamada para o serviço de cartões.");
             e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, mensagemErro);
         } catch (RetryableException e){
             logger.error("Erro de conexão com o serviço de cartões={}", e.getMessage());
             e.printStackTrace();

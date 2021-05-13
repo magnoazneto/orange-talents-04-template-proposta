@@ -55,6 +55,6 @@ public class BloqueioController {
             transacao.atualizaEComita(cartaoEncontrado);
             logger.info("Novo bloqueio efetuado no cartão={}", obfuscator.hide(cartaoEncontrado.getNumero()));
             return null;
-        });
+        }, "Cartão já se encontra bloqueado no serviço externo.");
     }
 }
