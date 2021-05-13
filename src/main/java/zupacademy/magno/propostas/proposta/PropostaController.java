@@ -10,9 +10,7 @@ import zupacademy.magno.propostas.sistemasexternos.analises.*;
 import zupacademy.magno.propostas.utils.Obfuscator;
 import zupacademy.magno.propostas.utils.transactions.ExecutorTransacao;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.Optional;
 
 @RestController
@@ -24,8 +22,6 @@ public class PropostaController {
     @Autowired AnaliseRestricaoService analiseRestricaoService;
     @Autowired Obfuscator obfuscator;
     private final Logger logger = LoggerFactory.getLogger(PropostaController.class);
-    @Autowired
-    AnaliseRestricaoClient analiseRestricaoClient;
 
     public PropostaController(PropostaRepository propostaRepository, ExecutorTransacao transacao, AnaliseRestricaoService analiseRestricaoService, Obfuscator obfuscator) {
         this.propostaRepository = propostaRepository;
@@ -36,7 +32,7 @@ public class PropostaController {
 
     @GetMapping("/propostas/{id}")
     public ResponseEntity<PropostaResponse> consultaProposta(@PathVariable("id") Long id){
-        Optional<Proposta> possivelProposta = transacao.executa(() -> propostaRepository.findById(id));
+        Optional<Proposta> possivelProposta = propostaRepository.findById(id);
         return possivelProposta.map(
                 proposta -> ResponseEntity.ok(new PropostaResponse(proposta)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -45,21 +41,17 @@ public class PropostaController {
     @PostMapping("/propostas")
     public ResponseEntity<?> criaProposta(@RequestBody @Valid PropostaRequest request,
                                           UriComponentsBuilder uriComponentsBuilder){
+        if(propostaRepository.existsByDocumento(request.getDocumento())){
+            logger.warn("Proposta com documento já existente recebida. Documento={}", obfuscator.hide(request.getDocumento()));
+            return ResponseEntity.status(422).body("Já existe uma proposta em análise para esse solicitante.");
+        }
+        Proposta novaProposta = request.toModel();
+        transacao.salvaEComita(novaProposta);
+        analiseRestricaoService.analisaRestricao(novaProposta);
+        logger.info("Proposta={} salva como={}", novaProposta.getId(), novaProposta.getStatusRestricao());
 
-        Optional<Proposta> possivelProposta = transacao.executa(() -> propostaRepository.findByDocumento(request.getDocumento()));
-        return possivelProposta
-                .map(propostaExistente -> {
-                    logger.warn("Proposta com documento já existente recebida. Documento={}", obfuscator.hide(request.getDocumento()));
-                    return ResponseEntity.status(422).body("Já existe uma proposta em análise para esse solicitante.");
-                })
-                .orElseGet(() -> {
-            Proposta novaProposta = request.toModel();
-            transacao.salvaEComita(novaProposta);
-            analiseRestricaoService.analisaRestricao(novaProposta);
-            logger.info("Proposta={} salva como={}", novaProposta.getId(), novaProposta.getStatusRestricao());
-            URI uriRetorno = uriComponentsBuilder.path("api/v1/propostas/{id}").build(novaProposta.getId());
-            return ResponseEntity.created(uriRetorno).build();
-        });
+        return ResponseEntity.created(
+                uriComponentsBuilder.buildAndExpand(novaProposta.getId()).toUri()).build();
     }
 
 }

@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.web.server.ResponseStatusException;
+import zupacademy.magno.propostas.sistemasexternos.cartoes.CartaoFeignHandler;
 import zupacademy.magno.propostas.sistemasexternos.cartoes.CartaoFeignResponse;
 import zupacademy.magno.propostas.sistemasexternos.cartoes.CartoesClient;
 import zupacademy.magno.propostas.utils.Obfuscator;
@@ -22,15 +23,9 @@ import zupacademy.magno.propostas.utils.transactions.ExecutorTransacao;
 public class PropostaElegivelCriadaListener {
 
     private final Logger logger = LoggerFactory.getLogger(PropostaElegivelCriadaListener.class);
-
-    @Autowired
-    CartoesClient cartoesClient;
-
-    @Autowired
-    ExecutorTransacao transacao;
-
-    @Autowired
-    Obfuscator obfuscator;
+    @Autowired CartoesClient cartoesClient;
+    @Autowired ExecutorTransacao transacao;
+    @Autowired Obfuscator obfuscator;
 
     public PropostaElegivelCriadaListener(CartoesClient cartoesClient, ExecutorTransacao transacao, Obfuscator obfuscator) {
         this.cartoesClient = cartoesClient;
@@ -44,8 +39,8 @@ public class PropostaElegivelCriadaListener {
         Thread.sleep(3000);
         logger.info("Evento escutado: nova proposta criada.");
         Proposta proposta = event.getPropostaElegivel();
+        Assert.isTrue(!proposta.existeCartaoAssociado(), "Não deveria existir um cartão associado a essa proposta.");
         try{
-            Assert.isTrue(!proposta.existeCartaoAssociado(), "Não deveria existir um cartão associado a essa proposta.");
             CartaoFeignResponse cartaoResponse = cartoesClient.consultaCartao(proposta.getId());
             proposta.setCartao(cartaoResponse.toModel(proposta));
             transacao.atualizaEComita(proposta);

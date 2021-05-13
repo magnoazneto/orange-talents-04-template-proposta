@@ -5,17 +5,14 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ResponseStatus;
+
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 @RestControllerAdvice
 public class ExceptionHandler {
@@ -43,26 +40,4 @@ public class ExceptionHandler {
         return ResponseEntity.status(exception.getStatus())
                 .body(new ErroPadronizado(mensagens));
     }
-
-//    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-//    @org.springframework.web.bind.annotation.ExceptionHandler(AuthenticationException.class)
-//    public ErrorsDetailsDto handle(AuthenticationException exception){
-//        return new ErrorsDetailsDto("auth", exception.getMessage());
-//    }
-
-
-//
-//    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-//    @org.springframework.web.bind.annotation.ExceptionHandler(ConstraintViolationException.class)
-//    public List<ErroPadronizado> handle(ConstraintViolationException exception){
-//        List<ErroPadronizado> dto = new ArrayList<>();
-//        Set<ConstraintViolation<?>> violations = exception.getConstraintViolations();
-//
-//        violations.forEach(e -> {
-//            ErroPadronizado error = new ErroPadronizado(e.getInvalidValue().toString(), e.getMessage());
-//            dto.add(error);
-//        });
-//
-//        return dto;
-//    }
 }
