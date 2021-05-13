@@ -35,9 +35,7 @@ public class PropostaElegivelCriadaListener {
 
     @Async
     @EventListener
-    public void consultaCartao(PropostaElegivelCriadaEvent event) throws InterruptedException {
-        Thread.sleep(3000);
-        logger.info("Evento escutado: nova proposta criada.");
+    public void consultaCartao(PropostaElegivelCriadaEvent event){
         Proposta proposta = event.getPropostaElegivel();
         Assert.isTrue(!proposta.existeCartaoAssociado(), "Não deveria existir um cartão associado a essa proposta.");
         try{
