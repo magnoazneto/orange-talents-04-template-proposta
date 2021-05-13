@@ -2,6 +2,8 @@ package zupacademy.magno.propostas.cartao;
 
 import zupacademy.magno.propostas.bloqueio.Bloqueio;
 import zupacademy.magno.propostas.bloqueio.BloqueioResponse;
+import zupacademy.magno.propostas.carteira.Carteira;
+import zupacademy.magno.propostas.carteira.CarteiraResponse;
 import zupacademy.magno.propostas.viagem.AvisoViagemResponse;
 
 import java.time.LocalDateTime;
@@ -20,6 +22,7 @@ public class CartaoResponse {
     private BloqueioResponse bloqueio;
     private StatusCartao status;
     private Set<AvisoViagemResponse> avisosDeViagem = new HashSet<>();
+    private Set<CarteiraResponse> carteiras = new HashSet<>();
 
     public CartaoResponse(Cartao cartao) {
         this.id = cartao.getId();
@@ -34,6 +37,8 @@ public class CartaoResponse {
         if(!cartao.getAvisosDeViagem().isEmpty()){
             avisosDeViagem.addAll(cartao.getAvisosDeViagem().stream().map(AvisoViagemResponse::new).collect(Collectors.toSet()));
         }
+        Set<Carteira> carteirasCadastradas = cartao.getCarteiras();
+        this.carteiras.addAll(carteirasCadastradas.stream().map(CarteiraResponse::new).collect(Collectors.toSet()));
     }
 
     public Long getId() {
@@ -66,5 +71,9 @@ public class CartaoResponse {
 
     public Set<AvisoViagemResponse> getAvisosDeViagem() {
         return avisosDeViagem;
+    }
+
+    public Set<CarteiraResponse> getCarteiras() {
+        return carteiras;
     }
 }

@@ -18,4 +18,7 @@ public interface CartoesClient {
     @RequestMapping(method = RequestMethod.POST, value = "{id}/avisos", produces = "application/json")
     public void informaAvisoViagem(@PathVariable("id") String numeroCartao, @RequestBody AvisoViagemFeignRequest request);
 
+    @RequestMapping(method = RequestMethod.POST, value = "{id}/carteiras", produces = "application/json")
+    public void associaCarteira(@PathVariable("id") String numeroCartao, @RequestBody CarteiraFeignRequest request);
+
 }

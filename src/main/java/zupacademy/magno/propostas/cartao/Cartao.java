@@ -2,6 +2,8 @@ package zupacademy.magno.propostas.cartao;
 
 import zupacademy.magno.propostas.biometria.Biometria;
 import zupacademy.magno.propostas.bloqueio.Bloqueio;
+import zupacademy.magno.propostas.carteira.Carteira;
+import zupacademy.magno.propostas.carteira.TipoCarteira;
 import zupacademy.magno.propostas.proposta.Proposta;
 import zupacademy.magno.propostas.viagem.AvisoViagem;
 
@@ -9,7 +11,10 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Entity
 @Table(name = "cartao")
@@ -35,6 +40,8 @@ public class Cartao {
     private StatusCartao status = StatusCartao.ATIVO;
     @OneToMany(mappedBy = "cartao")
     private Set<AvisoViagem> avisosDeViagem;
+    @OneToMany(mappedBy = "cartao")
+    private Set<Carteira> carteiras = new HashSet<>();
 
     @Deprecated
     public Cartao() {
@@ -95,5 +102,16 @@ public class Cartao {
 
     public Set<AvisoViagem> getAvisosDeViagem() {
         return avisosDeViagem;
+    }
+
+    public Set<Carteira> getCarteiras() {
+        return carteiras;
+    }
+
+    public boolean possuiCarteira(TipoCarteira carteiraRecebida){
+        Set<Carteira> carteirasIguais = this.carteiras.stream()
+                .filter(carteira -> carteira
+                        .getTipoCarteira().equals(carteiraRecebida)).collect(Collectors.toSet());
+        return !carteirasIguais.isEmpty();
     }
 }

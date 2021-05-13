@@ -56,21 +56,5 @@ public class BloqueioController {
             logger.info("Novo bloqueio efetuado no cartão={}", obfuscator.hide(cartaoEncontrado.getNumero()));
             return null;
         });
-
-//        try{
-//
-//        } catch (FeignException.UnprocessableEntity e){
-//            logger.error("Erro 422 ao tentar bloquear o cartao={}", obfuscator.hide(cartaoEncontrado.getNumero()));
-//            e.printStackTrace();
-//            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Cartão já se encontra bloqueado no sistema externo.");
-//        } catch (RetryableException e){
-//            logger.error("Erro de conexão com o serviço de cartões={}", e.getMessage());
-//            e.printStackTrace();
-//            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Conexão mal sucedida com o serviço de cartões.");
-//        } catch (Exception e){
-//            logger.error("Erro ao tentar conectar com o serviço de cartões={}", e.getMessage());
-//            e.printStackTrace();
-//            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro desconhecido no serviço externo.");
-//        }
     }
 }
