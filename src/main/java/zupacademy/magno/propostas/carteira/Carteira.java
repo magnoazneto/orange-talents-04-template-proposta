@@ -15,7 +15,7 @@ public class Carteira {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
+    @NotNull @Enumerated(EnumType.STRING)
     private TipoCarteira tipoCarteira;
     @Email @NotBlank
     private String email;
