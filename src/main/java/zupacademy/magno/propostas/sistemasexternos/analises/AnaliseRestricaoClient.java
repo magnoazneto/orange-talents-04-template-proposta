@@ -2,6 +2,7 @@ package zupacademy.magno.propostas.sistemasexternos.analises;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -10,6 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface AnaliseRestricaoClient {
 
     @RequestMapping(method = RequestMethod.POST ,produces = "application/json")
-    public AnaliseRestricaoResponse analisaRestricao(AnaliseRestricaoRequest request);
-
+    public AnaliseRestricaoResponse analisaRestricao(@RequestBody AnaliseRestricaoRequest request);
 }
+
