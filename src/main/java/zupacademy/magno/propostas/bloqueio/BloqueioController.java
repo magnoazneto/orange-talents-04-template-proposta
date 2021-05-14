@@ -31,6 +31,14 @@ public class BloqueioController {
     @Autowired CartoesClient cartoesClient;
     @Autowired CartaoFeignHandler cartaoFeignHandler;
 
+    public BloqueioController(CartaoRepository cartaoRepository, ExecutorTransacao transacao, Obfuscator obfuscator, CartoesClient cartoesClient, CartaoFeignHandler cartaoFeignHandler) {
+        this.cartaoRepository = cartaoRepository;
+        this.transacao = transacao;
+        this.obfuscator = obfuscator;
+        this.cartoesClient = cartoesClient;
+        this.cartaoFeignHandler = cartaoFeignHandler;
+    }
+
     @PostMapping("/{idCartao}")
     public ResponseEntity<?> novoBloqueio(@PathVariable("idCartao") Long idCartao,
                                           HttpServletRequest servletRequest,
@@ -49,7 +57,8 @@ public class BloqueioController {
 
     private void bloqueiaCartao(Bloqueio novoBloqueio, Cartao cartaoEncontrado){
         cartaoFeignHandler.executa(() -> {
-            BloqueioFeignResponse bloqueioFeignResponse = cartoesClient.bloquearCartao(cartaoEncontrado.getNumero(), new BloqueioFeignRequest());
+            BloqueioFeignResponse bloqueioFeignResponse = cartoesClient.bloquearCartao(
+                    cartaoEncontrado.getNumero(), new BloqueioFeignRequest());
             Assert.isTrue(bloqueioFeignResponse.bloqueado(), "O resultado deveria ser BLOQUEADO");
             cartaoEncontrado.setBloqueio(novoBloqueio);
             transacao.atualizaEComita(cartaoEncontrado);

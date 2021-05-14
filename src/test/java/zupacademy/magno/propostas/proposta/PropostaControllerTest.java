@@ -72,21 +72,18 @@ class PropostaControllerTest {
     @Test
     @DisplayName("DEVE retornar proposta para id existente")
     public void test02(){
-        Cartao cartaoMockado = mock(Cartao.class);
-        propostaSemCartao.setCartao(cartaoMockado);
-        when(cartaoMockado.getId()).thenReturn(1L);
-        when(executorTransacao.executa(any())).thenReturn(Optional.of(propostaSemCartao));
+        when(propostaRepository.findById(any())).thenReturn(Optional.of(propostaSemCartao));
 
         ResponseEntity<PropostaResponse> respostaRecebida = controller.consultaProposta(1L);
         PropostaResponse propostaResponse = new PropostaResponse(propostaSemCartao);
-        assertEquals(propostaResponse.getDocumento(), respostaRecebida.getBody().getDocumento());
+        assertEquals(propostaResponse.getNome(), respostaRecebida.getBody().getNome());
         assertEquals(HttpStatus.OK, respostaRecebida.getStatusCode());
     }
 
     @Test
     @DisplayName("DEVE retornar 422 quando já existir proposta com documento igual")
     public void test03(){
-        when(executorTransacao.executa(any())).thenReturn(Optional.of(propostaSemCartao));
+        when(propostaRepository.existsByDocumento(any())).thenReturn(true);
         ResponseEntity<?> responseEntity = controller.criaProposta(propostaRequestValida, null);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }

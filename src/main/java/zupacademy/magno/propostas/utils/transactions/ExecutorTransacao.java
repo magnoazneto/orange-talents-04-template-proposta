@@ -13,6 +13,10 @@ public class ExecutorTransacao {
     @PersistenceContext
     private EntityManager manager;
 
+    public ExecutorTransacao(EntityManager manager) {
+        this.manager = manager;
+    }
+
     @Transactional
     public <T> T salvaEComita(T objeto) {
         manager.persist(objeto);
