@@ -41,7 +41,6 @@ public class CarteiraController {
             cartaoFeignHandler.executa(() -> {
                 cartoesClient.associaCarteira(cartaoEncontrado.getNumero(), new CarteiraFeignRequest(novaCarteira));
                 cartaoEncontrado.addCarteira(novaCarteira);
-//                transacao.salvaEComita(novaCarteira);
                 transacao.atualizaEComita(cartaoEncontrado);
                 return null;
             }, "Já existe uma carteira com dados semelhantes cadastrada.");
