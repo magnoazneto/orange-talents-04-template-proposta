@@ -41,7 +41,7 @@ public class Cartao {
     private StatusCartao status = StatusCartao.ATIVO;
     @OneToMany(mappedBy = "cartao")
     private Set<AvisoViagem> avisosDeViagem;
-    @OneToMany(mappedBy = "cartao")
+    @OneToMany(mappedBy = "cartao", cascade = CascadeType.MERGE)
     private Set<Carteira> carteiras = new HashSet<>();
 
     @Deprecated
@@ -114,5 +114,9 @@ public class Cartao {
                 .filter(carteira -> carteira
                         .getTipoCarteira().equals(carteiraRecebida)).collect(Collectors.toSet());
         return !carteirasIguais.isEmpty();
+    }
+
+    public void addCarteira(Carteira novaCarteira) {
+        this.carteiras.add(novaCarteira);
     }
 }

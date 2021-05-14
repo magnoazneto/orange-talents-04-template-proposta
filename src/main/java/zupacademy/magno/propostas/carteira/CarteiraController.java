@@ -40,7 +40,9 @@ public class CarteiraController {
             Carteira novaCarteira = request.toModel(cartaoEncontrado);
             cartaoFeignHandler.executa(() -> {
                 cartoesClient.associaCarteira(cartaoEncontrado.getNumero(), new CarteiraFeignRequest(novaCarteira));
-                transacao.salvaEComita(novaCarteira);
+                cartaoEncontrado.addCarteira(novaCarteira);
+//                transacao.salvaEComita(novaCarteira);
+                transacao.atualizaEComita(cartaoEncontrado);
                 return null;
             }, "Já existe uma carteira com dados semelhantes cadastrada.");
             URI uriRetorno = uriComponentsBuilder.path("api/v1/carteiras/{id}").build(novaCarteira.getId());

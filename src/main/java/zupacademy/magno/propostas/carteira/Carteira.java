@@ -19,7 +19,7 @@ public class Carteira {
     private TipoCarteira tipoCarteira;
     @Email @NotBlank
     private String email;
-    @NotNull @ManyToOne(cascade = CascadeType.MERGE)
+    @NotNull @ManyToOne
     private Cartao cartao;
     private LocalDateTime criadaEm = LocalDateTime.now();
 
