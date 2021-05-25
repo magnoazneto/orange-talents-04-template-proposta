@@ -24,7 +24,7 @@ public class Carteira {
     private LocalDateTime criadaEm = LocalDateTime.now();
 
     /**
-     * Para uso da JPA
+     * @deprecated Para uso da JPA
      */
     @Deprecated
     public Carteira() {

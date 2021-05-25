@@ -23,7 +23,6 @@ public class CarteiraController {
 
     @Autowired CartaoRepository cartaoRepository;
     @Autowired ExecutorTransacao transacao;
-    private final Logger logger = LoggerFactory.getLogger(CarteiraController.class);
     @Autowired CartaoFeignHandler cartaoFeignHandler;
     @Autowired CartoesClient cartoesClient;
 

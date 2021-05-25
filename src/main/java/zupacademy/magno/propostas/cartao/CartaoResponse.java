@@ -1,6 +1,5 @@
 package zupacademy.magno.propostas.cartao;
 
-import zupacademy.magno.propostas.bloqueio.Bloqueio;
 import zupacademy.magno.propostas.bloqueio.BloqueioResponse;
 import zupacademy.magno.propostas.carteira.Carteira;
 import zupacademy.magno.propostas.carteira.CarteiraResponse;

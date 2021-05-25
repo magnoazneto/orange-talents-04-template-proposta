@@ -1,7 +1,5 @@
 package zupacademy.magno.propostas.sistemasexternos.analises;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -19,16 +17,11 @@ public class AnaliseScheduler {
     @Autowired PropostaRepository propostaRepository;
     @Autowired AnaliseRestricaoService analiseRestricaoService;
 
-    private final Logger logger = LoggerFactory.getLogger(AnaliseScheduler.class);
-
     @Scheduled(fixedRateString = "${periodicidade.tentativa-analises}")
-//    @Scheduled(fixedRateString = "100000")
     public void analisaPropostasNaoAnalisadas(){
         Set<Proposta> propostas = transacao.executa(() -> propostaRepository
                 .findPropostaByStatusRestricaoAndCartaoId(StatusRestricao.NAO_ANALISADO, null));
 
-        propostas.forEach(proposta -> {
-            analiseRestricaoService.analisaRestricao(proposta);
-        });
+        propostas.forEach(proposta -> analiseRestricaoService.analisaRestricao(proposta));
     }
 }

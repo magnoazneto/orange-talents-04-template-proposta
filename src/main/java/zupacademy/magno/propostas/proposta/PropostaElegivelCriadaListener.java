@@ -12,7 +12,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.web.server.ResponseStatusException;
-import zupacademy.magno.propostas.sistemasexternos.cartoes.CartaoFeignHandler;
 import zupacademy.magno.propostas.sistemasexternos.cartoes.CartaoFeignResponse;
 import zupacademy.magno.propostas.sistemasexternos.cartoes.CartoesClient;
 import zupacademy.magno.propostas.utils.Obfuscator;
