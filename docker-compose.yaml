@@ -110,8 +110,8 @@ services:
 #      DATABASE_PASSWORD: root
 #      PERIODICIDADE_NUMERO_CARTAO: 100000
 #      PERIODICIDADE_ANALISE_RESTRICAO: 100000
-#      KEYCLOAK_ISSUER_URI: http://keycloak:8080/auth/realms/propostas
-#      KEYCLOAK_JWKS_URI: http://keycloak:8080/auth/realms/propostas/protocol/openid-connect/certs
+#      KEYCLOAK_ISSUER_URI: http://keycloak:8080/auth/realms/fase04
+#      KEYCLOAK_JWKS_URI: http://keycloak:8080/auth/realms/fase04/protocol/openid-connect/certs
 #
 #  mysql:
 #    image: 'mysql:5.7'
@@ -154,12 +154,11 @@ services:
   prometheus:
     image: prom/prometheus
     volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus-volume:/etc/prometheus/
     network_mode: bridge
     ports:
       - "9090:9090"
-    environment:
-      TZ: America/Fortaleza
 
   grafana:
     image: grafana/grafana
